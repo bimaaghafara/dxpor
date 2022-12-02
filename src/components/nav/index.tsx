@@ -1,5 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable @next/next/link-passhref */
 import * as React from 'react';
 import { SxProps } from '@mui/material';
 import AppBar from '@mui/material/AppBar';
