@@ -4,6 +4,8 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Toolbar from '@mui/material/Toolbar';
+import Menu from '@mui/material/Menu';
+import MenuItem from '@mui/material/MenuItem';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Container from '@mui/material/Container';
@@ -19,7 +21,13 @@ type ILogoProps = {
 const links = [
     { href: '/', label: 'Home' },
     { href: '/about-us', label: 'About Us' },
-    { href: '/products', label: 'Products' },
+    {
+        label: 'Products', children: [
+            { href: '/product/coffee-bean', label: 'Coffee Bean' },
+            { href: '/product/honey', label: 'Honey' },
+            { href: '/product/charcoal-briquettes', label: 'Charcoal Briquettes' },
+        ]
+    },
     { href: '/contact', label: 'contact' },
 ];
 
@@ -42,6 +50,7 @@ const Logo = ({ sx }: ILogoProps) => (
 
 const MobileDrawer = () => {
     const [open, setOpen] = React.useState(false);
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     return (
         <>
             <IconButton
@@ -78,9 +87,41 @@ const MobileDrawer = () => {
                     <Logo />
                     {links.map((link, i) => (
                         <div key={i}>
-                            <Link href={link.href}>
-                                <Button color="inherit">{link.label}</Button>
-                            </Link>
+                            {link.href && !link.children ? (
+                                <Link href={link.href}>
+                                    <Button color="inherit">{link.label}</Button>
+                                </Link>
+                            ) : (
+                                <>
+                                    <Button
+                                        id={link.label}
+                                        color="inherit"
+                                        aria-controls={anchorEl?.id === link.label ? 'basic-menu' : undefined}
+                                        aria-haspopup="true"
+                                        aria-expanded={anchorEl?.id === link.label ? 'true' : undefined}
+                                        onClick={(e) => setAnchorEl(e.currentTarget)}
+                                    >
+                                        {link.label}
+                                    </Button>
+                                    <Menu
+                                        id="basic-menu"
+                                        anchorEl={anchorEl}
+                                        open={anchorEl?.id === link.label}
+                                        onClose={() => setAnchorEl(null)}
+                                        MenuListProps={{
+                                        'aria-labelledby': 'basic-button',
+                                        }}
+                                    >
+                                        {link?.children?.map((child, i) => (
+                                            <MenuItem key={i} sx={{ p: 0 }}>
+                                                <Link href={child.href} style={{ width: '100%' }}>
+                                                    <Button fullWidth color="inherit" sx={{ justifyContent: 'flex-start' }}>{child.label}</Button>
+                                                </Link>
+                                            </MenuItem>
+                                        ))}
+                                    </Menu>
+                                </>
+                            )}
                         </div>
                     ))}
                     <Box sx={{
@@ -107,6 +148,7 @@ const MobileDrawer = () => {
 }
 
 const Nav = () => {
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     return (
         <Box sx={{ flexGrow: 1 }}>
             <AppBar
@@ -127,9 +169,44 @@ const Nav = () => {
                             }}
                         >
                             {links.map((link, i) => (
-                                <Link href={link.href} key={i}>
-                                    <Button sx={{ mt: '6px' }} color="inherit">{link.label}</Button>
-                                </Link>
+                                <>
+                                    {link.href && !link.children ? (
+                                        <Link href={link.href}>
+                                            <Button sx={{ mt: '6px' }} color="inherit">{link.label}</Button>
+                                        </Link>
+                                    ) : (
+                                        <>
+                                            <Button
+                                                sx={{ mt: '6px' }} 
+                                                id={link.label}
+                                                color="inherit"
+                                                aria-controls={anchorEl?.id === link.label ? 'basic-menu' : undefined}
+                                                aria-haspopup="true"
+                                                aria-expanded={anchorEl?.id === link.label ? 'true' : undefined}
+                                                onClick={(e) => setAnchorEl(e.currentTarget)}
+                                            >
+                                                {link.label}
+                                            </Button>
+                                            <Menu
+                                                id="basic-menu"
+                                                anchorEl={anchorEl}
+                                                open={anchorEl?.id === link.label}
+                                                onClose={() => setAnchorEl(null)}
+                                                MenuListProps={{
+                                                'aria-labelledby': 'basic-button',
+                                                }}
+                                            >
+                                                {link?.children?.map((child, i) => (
+                                                    <MenuItem key={i} sx={{ p: 0 }}>
+                                                        <Link href={child.href} style={{ width: '100%' }}>
+                                                            <Button fullWidth color="inherit" sx={{ justifyContent: 'flex-start' }}>{child.label}</Button>
+                                                        </Link>
+                                                    </MenuItem>
+                                                ))}
+                                            </Menu>
+                                        </>
+                                    )}
+                                </>
                             ))}
                             <Box sx={{
                                 float: 'right',
