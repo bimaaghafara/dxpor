@@ -15,7 +15,8 @@ import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import EmailIcon from '@mui/icons-material/Email';
 
 type ILogoProps = {
-    sx?: SxProps
+    sx?: SxProps;
+    rootStyle?: React.CSSProperties;
 }
 
 const links = [
@@ -31,8 +32,8 @@ const links = [
     { href: '/contact', label: 'contact' },
 ];
 
-const Logo = ({ sx }: ILogoProps) => (
-    <Link href="/" >
+const Logo = ({ sx, rootStyle }: ILogoProps) => (
+    <Link href="/" style={rootStyle}>
         <Box
             sx={{
                 borderRadius: '99px',
@@ -68,16 +69,7 @@ const MobileDrawer = () => {
             >
                 <MenuIcon />
             </IconButton>
-            <Logo sx={{
-                ml: {
-                    xs: 'calc(50vw - 100px)',
-                    md: 0
-                },
-                mr: {
-                    xs: '0',
-                    md: '12px',
-                }
-            }}/>
+            <Logo rootStyle={{ margin: 'auto' }} />
             <Drawer
                 anchor={'left'}
                 open={open}
